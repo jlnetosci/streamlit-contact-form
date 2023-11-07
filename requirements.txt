@@ -2,4 +2,5 @@ captcha==0.5.0
 email-validator==2.1.0.post1
 Pillow==9.0.1
 python-dotenv==1.0.0
-streamlit==1.28.0
+streamlit==1.28.1
+streamlit-js-eval==0.1.5
