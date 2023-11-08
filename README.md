@@ -1,28 +1,20 @@
-# streamlit contact form template
+# Streamlit Contact Form Template
 
 ![contact-form](/img/screenshot.png)
+[Live Demo](https://contact-form-template.streamlit.app/contact-form)
 
 ## About
-This repository contains a contact form template (`pages/contact-form.py`) as a separate page for streamlit apps, using exclusively python libraries and streamlit elements, and will therefore fit right in with your already set up app.
+This repository contains as a separate page `pages/contact-form.py`, which is a contact form template for Streamlit apps. While there are alternatives using external tools, this project exclusively utilizes python libraries and Streamlit elements, making it seamlessly integrate with your app.
 
-The template contains e-mail validation using [email-validator](https://pypi.org/project/email-validator/) and customizable CAPTCHA generation through python's [captcha](https://pypi.org/project/captcha/) library. Configuration should be done using [dotenv](https://pypi.org/project/python-dotenv/) and messages sent using the [smtplib](https://docs.python.org/3/library/smtplib.html) SMTP protocol client.
+The template contains e-mail validation using [email-validator](https://pypi.org/project/email-validator/) and customizable CAPTCHA generation through python's [captcha](https://pypi.org/project/captcha/) library. Messages are processed using the [smtplib](https://docs.python.org/3/library/smtplib.html) SMTP protocol client.
 
-## Configuration
+The message will be directed to an email address of your choice, and you have the option to simultaneously send a confirmation to the provided contact email.
 
-This application uses environment variables stored in a .env file for configuration. Make sure to create a .env file in the pages folder with the following variables:
-
-    OPTIONS: A string of characters that can be included in the CAPTCHA. (e.g. ACDEFGHIJKLMNOQPRSTUVWXYZ123456789)
-    SERVER: Your SMTP server address. (e.g. smtp.gmail.com)
-    PORT: The port for your SMTP server. (e.g 587)
-    U: Your SMTP username. (the e-mail address that will send the message, e.g. user@example-email.com)
-    SECRET: Your SMTP password.
-    RECIPIENT: The recipient email address where messages will be sent. (e.g .recipient@example-email.com)
-
-You can use [gmail](https://support.google.com/a/answer/176600?hl=en) for your SMTP configuration.
+For a smoother setup and configuration experience, I recommend having some familiarity with Streamlit [multipage apps](https://docs.streamlit.io/library/get-started/multipage-apps/create-a-multipage-app), and how Streamlit manages [secrets](https://docs.streamlit.io/streamlit-community-cloud/deploy-your-app/secrets-management) when deploying an app.
 
 ## Setup
 
-After you have configured your SMTP, uncomment the lines relative to "Email configuration" in `pages/contact-form.py` (lines 90-116, v0.1.0): 
+To turn `pages/contact-form.py` into a fully functioning contact form, uncomment the lines relative to "Email configuration" (v0.2.0, lines 91-129): 
 
 ``` python                   
 #smtp_server = server
@@ -37,7 +29,7 @@ After you have configured your SMTP, uncomment the lines relative to "Email conf
 #server.login(smtp_username, smtp_password)
 
 ## Compose the email message
-#subject = "Contact Form Submission" # subject of the e-mail you will receive upon contact.
+#subject = "Contact Form Submission" # subject of the email you will receive upon contact.
 #body = f"Email: {email}\nMessage: {message}"
 #msg = MIMEMultipart()
 #msg['From'] = smtp_username
@@ -48,19 +40,57 @@ After you have configured your SMTP, uncomment the lines relative to "Email conf
 ## Send the email
 #server.sendmail(smtp_username, recipient_email, msg.as_string())
 
+## Send the confirmation email to the message sender # If you do not want to send a confirmation email leave this section commented
+#current_datetime = datetime.datetime.now()
+#formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+#confirmation_subject = f"Confirmation of Contact Form Submission ({formatted_datetime})"
+#confirmation_body = f"Thank you for contacting us! Your message has been received.\n\nYour message: {message}"
+#confirmation_msg = MIMEMultipart()
+#confirmation_msg['From'] = smtp_username
+#confirmation_msg['To'] = email  # Use the sender's email address here
+#confirmation_msg['Subject'] = confirmation_subject
+#confirmation_msg.attach(MIMEText(confirmation_body, 'plain'))
+#server.sendmail(smtp_username, email, confirmation_msg.as_string())
+
 ## Close the SMTP server connection
 #server.quit()
 
 #st.success("Sent successfully!") # Success message to the user.
 ```
 
-and comment or delete the mock-up information (lines 119-120, v0.1.0):
+and comment or delete the mock-up information (v0.2.0, lines 132-133):
 
 ``` python
 st.info("""This would have been a message sent successfully!  
 For more information on activating the contact form, please check the [documentation](https://github.com/jlnetosci/streamlit-contact-form).""") # Please delete this info box if you have the contact form setup correctly.
 ```
 
-The contact form should be fully functional.
+## Configuration
 
-You can test a quasi-functional contact form at https://contact-form-template.streamlit.app/
+To successfully process messages, you will need to set up an SMTP server. You can do it using something as user-friendly as [Gmail](https://support.google.com/a/answer/176600?hl=en).I recommend using a dedicated email address specifically for forwarding contact form messages.
+
+When deploying your app configure these variables:
+
+    OPTIONS: A string of characters that can be included in the CAPTCHA.
+    SERVER: Your SMTP server address
+    PORT: The port for your SMTP server.
+    U: Your SMTP username.
+    SECRET: Your SMTP password.
+    RECIPIENT: The recipient email address where messages will be sent. 
+
+For example: 
+
+    OPTIONS = "ACDEFGHIJKLMNOQPRSTUVWXYZ123456789"
+    SERVER = "smtp.gmail.com""
+    PORT = 587
+    U = "email-address-that-will-SEND-the-message@gmail.com"
+    SECRET = "password-provided-by-gmail-for-use-in-apps"
+    RECIPIENT = "your-email-address-that-will-RECEIVE-the-message@gmail.com"
+
+## Customization
+
+The form is highly customizable in terms of appearance and text content. Feel free to make it your own if you use it in any capacity.
+
+## Interact with the contact form
+
+You can interact with this quasi-functional version (it will not actually send a contact message but will, in every other way, behave like the functional contact form) at https://contact-form-template.streamlit.app/.
