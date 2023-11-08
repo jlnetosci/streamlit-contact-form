@@ -1,9 +1,9 @@
 #########################################################################
 #                   STREAMLIT CONTACT FORM TEMPLATE                     #
-# Version: 0.1.0                                                        #
+# Version: 0.2.0                                                        #
 # License: MIT License (https://opensource.org/license/mit/)            #
 # Author: João L. Neto (https://github.com/jlnetosci/)                  #
-# Release date: 2023-11-06                                              #
+# Release date: 2023-11-07                                              #
 # Documentation: https://github.com/jlnetosci/streamlit-contact-form    #
 # Credit is not mandatory, but it is kindly appreciated.                #
 # For a subtle link to github you may just uncomment the last line.     #
@@ -13,6 +13,8 @@ import streamlit as st
 import smtplib
 import random
 import os
+import time
+import datetime
 
 from email_validator import validate_email, EmailNotValidError
 from email.mime.text import MIMEText
@@ -20,13 +22,12 @@ from email.mime.multipart import MIMEMultipart
 from captcha.image import ImageCaptcha
 from io import BytesIO
 from PIL import Image
-from dotenv import load_dotenv
+from streamlit_js_eval import streamlit_js_eval
 
-## Configuration options
+## Page configuration options
 st.set_page_config(layout="wide") # column widths set below are dependent on the layout being set to wide
 
-## Load .env variables
-load_dotenv()
+## Load secrets.toml variables
 options = os.getenv("OPTIONS")
 server = os.getenv("SERVER")
 port = os.getenv("PORT")
@@ -68,7 +69,7 @@ with col3: # right side of the layout
 
 ## Contact form
 with col1: # left side of the layout
-    email = st.text_input("**Your email***", value=st.session_state.get('email', ''), key='email') # input widget for contact e-mail
+    email = st.text_input("**Your email***", value=st.session_state.get('email', ''), key='email') # input widget for contact email
     message = st.text_area("**Your message***", value=st.session_state.get('message', ''), key='message') # input widget for message
 
     st.markdown('<p style="font-size: 13px;">*Required fields</p>', unsafe_allow_html=True) # indication to user that both fields must be filled
@@ -78,14 +79,14 @@ with col1: # left side of the layout
             st.error("Please fill out all required fields.") # error for any blank field
         else:
             try:
-                # Robust e-mail validation
+                # Robust email validation
                 valid = validate_email(email, check_deliverability=True)
 
                 # Check CAPTCHA
                 if captcha_input.upper() == captcha_text:
 
-                    # Email configuration - **IMPORTANT**: for security these details should be present in a .env file, a format that should be present in the .gitignore and not made public.
-                    #### NOTE FOR DEVELOPERS: PLEASE UNCOMMENT THE LINES BELOW FOR THE AFTER YOU HAVE .env CONFIGURED ####
+                    # Email configuration - **IMPORTANT**: for security these details should be present in the "Secrets" section of Streamlit
+                    #### NOTE FOR DEVELOPERS: UNCOMMENT THE LINES BELOW ####
                     
                     #smtp_server = server
                     #smtp_port = port
@@ -99,7 +100,7 @@ with col1: # left side of the layout
                     #server.login(smtp_username, smtp_password)
 
                     ## Compose the email message
-                    #subject = "Contact Form Submission" # subject of the e-mail you will receive upon contact.
+                    #subject = "Contact Form Submission" # subject of the email you will receive upon contact.
                     #body = f"Email: {email}\nMessage: {message}"
                     #msg = MIMEMultipart()
                     #msg['From'] = smtp_username
@@ -109,6 +110,18 @@ with col1: # left side of the layout
 
                     ## Send the email
                     #server.sendmail(smtp_username, recipient_email, msg.as_string())
+
+                    ## Send the confirmation email to the message sender # If you do not want to send a confirmation email leave this section commented
+                    #current_datetime = datetime.datetime.now()
+                    #formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+                    #confirmation_subject = f"Confirmation of Contact Form Submission ({formatted_datetime})"
+                    #confirmation_body = f"Thank you for contacting us! Your message has been received.\n\nYour message: {message}"
+                    #confirmation_msg = MIMEMultipart()
+                    #confirmation_msg['From'] = smtp_username
+                    #confirmation_msg['To'] = email  # Use the sender's email address here
+                    #confirmation_msg['Subject'] = confirmation_subject
+                    #confirmation_msg.attach(MIMEText(confirmation_body, 'plain'))
+                    #server.sendmail(smtp_username, email, confirmation_msg.as_string())
 
                     ## Close the SMTP server connection
                     #server.quit()
@@ -125,10 +138,13 @@ with col1: # left side of the layout
                     # Update the displayed captcha image
                     captcha_placeholder.image(captcha_image, use_column_width=True)
 
+                    time.sleep(3)
+                    streamlit_js_eval(js_expressions="parent.window.location.reload()")
+
                 else:
                     st.error("Text does not match the CAPTCHA.") # error to the user in case CAPTCHA does not match input
 
             except EmailNotValidError as e:
-                st.error(f"Invalid email address. {e}") # error in case any of the e-mail validation checks have not passed
+                st.error(f"Invalid email address. {e}") # error in case any of the email validation checks have not passed
 
-#st.markdown(f'<div style="position: fixed; bottom: 0; width: 100%; "><p style="text-align: left; color: #a3a0a3; margin-bottom: 28px; font-size: 11px;">Template by: <a href="https://github.com/jlnetosci" target="_blank" style="color: inherit;">João L. Neto</a></p></div>', unsafe_allow_html=True)
+#st.markdown(f'<div style="position: fixed; bottom: 0; width: 100%; "><p style="text-align: left; color: #a3a0a3; margin-bottom: 28px; font-size: 11px;"><a href="https://github.com/jlnetosci/streamlit-contact-form" target="_blank" style="color: inherit;">Base template</a> by: <a href="https://github.com/jlnetosci" target="_blank" style="color: inherit;">João L. Neto</a></p></div>', unsafe_allow_html=True)
