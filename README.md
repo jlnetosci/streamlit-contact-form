@@ -4,13 +4,13 @@
 [Live Demo](https://contact-form-template.streamlit.app/contact-form)
 
 ## About
-This repository contains as a separate page `pages/contact-form.py`, which is a contact form template for Streamlit apps. While there are alternatives using external tools, this project exclusively utilizes python libraries and Streamlit elements, making it seamlessly integrate with your app.
+This repository contains `pages/contact-form.py`, a contact form template for Streamlit apps. While there are alternatives using external tools, this project exclusively utilizes python libraries and Streamlit elements, making it integrate with your app seamlessly.
 
 The template contains e-mail validation using [email-validator](https://pypi.org/project/email-validator/) and customizable CAPTCHA generation through python's [captcha](https://pypi.org/project/captcha/) library. Messages are processed using the [smtplib](https://docs.python.org/3/library/smtplib.html) SMTP protocol client.
 
-The message will be directed to an email address of your choice, and you have the option to simultaneously send a confirmation to the provided contact email.
+Messages will be directed to an email address of your choice, and you have the option to simultaneously send a confirmation to the messaging user's provided contact email.
 
-For a smoother setup and configuration experience, I recommend having some familiarity with Streamlit [multipage apps](https://docs.streamlit.io/library/get-started/multipage-apps/create-a-multipage-app), and how Streamlit manages [secrets](https://docs.streamlit.io/streamlit-community-cloud/deploy-your-app/secrets-management) when deploying an app.
+For a smoother setup and configuration, I recommend having some familiarity with Streamlit [multipage apps](https://docs.streamlit.io/library/get-started/multipage-apps/create-a-multipage-app), and how Streamlit manages [secrets](https://docs.streamlit.io/streamlit-community-cloud/deploy-your-app/secrets-management) when deploying an app.
 
 ## Setup
 
@@ -67,9 +67,9 @@ For more information on activating the contact form, please check the [documenta
 
 ## Configuration
 
-To successfully process messages, you will need to set up an SMTP server. You can do it using something as user-friendly as [Gmail](https://support.google.com/a/answer/176600?hl=en).I recommend using a dedicated email address specifically for forwarding contact form messages.
+To successfully process messages, you will need to set up an SMTP server. You can do it using something as user-friendly as [Gmail](https://support.google.com/a/answer/176600?hl=en). I would recommend using a dedicated email address specifically for forwarding contact form messages.
 
-When deploying your app configure these variables:
+When deploying your app [configure these variables](https://docs.streamlit.io/streamlit-community-cloud/deploy-your-app/secrets-management):
 
     OPTIONS: A string of characters that can be included in the CAPTCHA.
     SERVER: Your SMTP server address
@@ -89,7 +89,7 @@ For example:
 
 ## Customization
 
-The form is highly customizable in terms of appearance and text content. Feel free to make it your own if you use it in any capacity.
+The form is highly customizable regarding appearance and text content. Feel free to make it your own if you use it in any capacity.
 
 ## Interact with the contact form
 
